@@ -44,11 +44,7 @@
     <Folder Include="Modules\Shared\Infrastructure\Persistence\" />
     <Folder Include="Modules\Shared\Infrastructure\Storage\" />
     <Folder Include="Modules\Shared\Kernel\Constants\" />
-    <Folder Include="Modules\Shared\Kernel\Exceptions\" />
     <Folder Include="Modules\Shared\Kernel\Mediator\" />
-    <Folder Include="Modules\Shared\Kernel\ValueObjects\" />
-    <Folder Include="Modules\Shared\Kernel\Abstractions\" />
-    <Folder Include="Modules\Shared\Kernel\Entities\" />
   </ItemGroup>
 
 </Project>
