@@ -43,7 +43,6 @@
     <Folder Include="Modules\Shared\Infrastructure\Security\" />
     <Folder Include="Modules\Shared\Infrastructure\Persistence\" />
     <Folder Include="Modules\Shared\Infrastructure\Storage\" />
-    <Folder Include="Modules\Shared\Kernel\Constants\" />
   </ItemGroup>
 
 </Project>
