@@ -44,7 +44,6 @@
     <Folder Include="Modules\Shared\Infrastructure\Persistence\" />
     <Folder Include="Modules\Shared\Infrastructure\Storage\" />
     <Folder Include="Modules\Shared\Kernel\Constants\" />
-    <Folder Include="Modules\Shared\Kernel\Mediator\" />
   </ItemGroup>
 
 </Project>
