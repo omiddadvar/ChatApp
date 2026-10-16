@@ -37,7 +37,6 @@
   <ItemGroup>
     <Folder Include="Modules\Notification\" />
     <Folder Include="Modules\Main\" />
-    <Folder Include="Modules\Identity\" />
   </ItemGroup>
 
 </Project>
