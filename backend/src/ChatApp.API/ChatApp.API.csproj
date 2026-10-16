@@ -38,7 +38,6 @@
     <Folder Include="Modules\Notification\" />
     <Folder Include="Modules\Main\" />
     <Folder Include="Modules\Identity\" />
-    <Folder Include="Modules\Shared\Infrastructure\Logging\" />
   </ItemGroup>
 
 </Project>
