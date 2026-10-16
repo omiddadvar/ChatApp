@@ -41,7 +41,6 @@
     <Folder Include="Modules\Shared\Infrastructure\Mongo\" />
     <Folder Include="Modules\Shared\Infrastructure\Logging\" />
     <Folder Include="Modules\Shared\Infrastructure\Security\" />
-    <Folder Include="Modules\Shared\Infrastructure\Persistence\" />
     <Folder Include="Modules\Shared\Infrastructure\Storage\" />
   </ItemGroup>
 
