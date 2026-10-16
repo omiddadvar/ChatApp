@@ -1,5 +1,6 @@
 using ChatApp.API.Modules.Shared.Infrastructure;
 using ChatApp.API.Modules.Shared.Kernel;
+using FluentValidation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,8 +11,10 @@ builder.Services.AddControllers();
 builder.Services.AddSharedInfrastructure(builder.Configuration);
 builder.Services.AddSharedKernel();
 
-//builder.Services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
-//builder.Services.AddScoped(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
+builder.Services.AddValidatorsFromAssembly(
+    typeof(Program).Assembly,
+    includeInternalTypes: true);
+
 
 var app = builder.Build();
 

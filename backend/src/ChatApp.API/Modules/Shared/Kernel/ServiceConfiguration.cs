@@ -1,4 +1,5 @@
-﻿using ChatApp.API.Modules.Shared.Kernel.Mediator;
+﻿using ChatApp.API.Modules.Shared.Kernel.Behaviors;
+using ChatApp.API.Modules.Shared.Kernel.Mediator;
 using ChatApp.API.Modules.Shared.Kernel.Mediator.Abstractions;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.Reflection;
@@ -11,6 +12,8 @@ public static class ServiceConfiguration
         this IServiceCollection services,
         params Assembly[] assemblies)
     {
+        services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+
         services.AddMediatorConfiguration(assemblies);
 
         return services;
