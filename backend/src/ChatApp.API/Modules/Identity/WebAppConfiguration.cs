@@ -9,8 +9,8 @@ public static class WebAppConfiguration
 
         using (var scope = app.Services.CreateScope())
         {
-            var mainSeeder = scope.ServiceProvider.GetRequiredKeyedService<ISeeder>("Identity");
-            await mainSeeder.SeedAsync();
+            var identitySeeder = scope.ServiceProvider.GetRequiredKeyedService<ISeeder>("Identity");
+            await identitySeeder.SeedAsync();
         }
     }
 }
