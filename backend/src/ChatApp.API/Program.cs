@@ -1,3 +1,4 @@
+using ChatApp.API.Modules.Main;
 using ChatApp.API.Modules.Shared.Infrastructure;
 using ChatApp.API.Modules.Shared.Kernel;
 using FluentValidation;
@@ -11,6 +12,9 @@ builder.Services.AddControllers();
 builder.Services.AddSharedInfrastructure(builder.Configuration);
 builder.Services.AddSharedKernel();
 
+builder.Services.AddMainModule(builder.Configuration);
+
+
 builder.Services.AddValidatorsFromAssembly(
     typeof(Program).Assembly,
     includeInternalTypes: true);
@@ -18,6 +22,7 @@ builder.Services.AddValidatorsFromAssembly(
 
 var app = builder.Build();
 
+await app.MainModuleWebAppConfig();
 // Configure the HTTP request pipeline.
 
 app.UseHttpsRedirection();
