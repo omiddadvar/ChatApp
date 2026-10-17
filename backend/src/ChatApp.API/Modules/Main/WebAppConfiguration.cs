@@ -1,5 +1,6 @@
 ﻿using ChatApp.API.Modules.Main.Infrastructure.Mongo;
 using ChatApp.API.Modules.Shared.Infrastructure.Mongo;
+using ChatApp.API.Modules.Shared.Kernel.Abstractions;
 
 namespace ChatApp.API.Modules.Main;
 
@@ -12,6 +13,9 @@ public static class WebAppConfiguration
         {
             var mongoContext = scope.ServiceProvider.GetRequiredService<IMongoContext>();
             await ChatHistoryRepository.EnsureIndexesAsync(mongoContext);
+
+            var mainSeeder = scope.ServiceProvider.GetRequiredKeyedService<ISeeder>("Main");
+            await mainSeeder.SeedAsync();
         }
     }
 }

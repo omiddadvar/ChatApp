@@ -27,6 +27,8 @@ builder.Services.AddValidatorsFromAssembly(
 var app = builder.Build();
 
 await app.MainModuleWebAppConfig();
+await app.IdentityModuleWebAppConfig();
+
 // Configure the HTTP request pipeline.
 
 app.UseHttpsRedirection();

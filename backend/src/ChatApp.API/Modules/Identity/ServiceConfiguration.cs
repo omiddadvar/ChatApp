@@ -2,7 +2,9 @@
 using ChatApp.API.Modules.Identity.Application.Services;
 using ChatApp.API.Modules.Identity.Domain;
 using ChatApp.API.Modules.Identity.Infrastructure.Persistence;
+using ChatApp.API.Modules.Identity.Infrastructure.Seeders;
 using ChatApp.API.Modules.Shared.Infrastructure.Persistence.Interceptors;
+using ChatApp.API.Modules.Shared.Kernel.Abstractions;
 using ChatApp.API.Modules.Shared.Kernel.Constants;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -27,6 +29,8 @@ public static class ServiceConfiguration
         services.AddAuthorizationConfigs();
 
         services.AddScoped<ITokenService, TokenService>();
+
+        services.AddKeyedScoped<ISeeder, IdentitySeeder>("Identity");
 
         return services;
     }
