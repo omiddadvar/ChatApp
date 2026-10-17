@@ -1,3 +1,5 @@
+using ChatApp.API.Hubs;
+using ChatApp.API.Modules.Identity;
 using ChatApp.API.Modules.Main;
 using ChatApp.API.Modules.Shared.Infrastructure;
 using ChatApp.API.Modules.Shared.Kernel;
@@ -11,6 +13,8 @@ builder.Services.AddControllers();
 
 builder.Services.AddSharedInfrastructure(builder.Configuration);
 builder.Services.AddSharedKernel();
+
+builder.Services.AddIdentityModule(builder.Configuration);
 
 builder.Services.AddMainModule(builder.Configuration);
 
@@ -30,5 +34,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<ChatHub>("/hubs/chat");
+
 
 app.Run();

@@ -4,6 +4,7 @@ using ChatApp.API.Modules.Shared.Infrastructure.Persistence.Repositories;
 using ChatApp.API.Modules.Shared.Infrastructure.Security;
 using ChatApp.API.Modules.Shared.Infrastructure.Storage;
 using ChatApp.API.Modules.Shared.Kernel.Abstractions;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Minio;
 using MongoDB.Driver;
@@ -27,6 +28,9 @@ public static class ServiceConfiguration
         services.AddMinioInfrastructure(configuration);
 
         services.AddMongoInfrastructure(configuration);
+
+        services.AddSingleton<IUserIdProvider, SignalRUserIdProvider>();
+
 
         return services;
     }

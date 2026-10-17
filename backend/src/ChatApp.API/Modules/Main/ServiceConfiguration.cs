@@ -1,5 +1,7 @@
-﻿using ChatApp.API.Modules.Main.Application.Interfaces;
+﻿using ChatApp.API.Modules.Main.Application.Abstractions;
+using ChatApp.API.Modules.Main.Application.Interfaces;
 using ChatApp.API.Modules.Main.Infrastructure.Mongo;
+using ChatApp.API.Modules.Main.Infrastructure.Notification;
 using ChatApp.API.Modules.Main.Infrastructure.Persistence;
 using ChatApp.API.Modules.Shared.Infrastructure.Persistence.Interceptors;
 using Microsoft.EntityFrameworkCore;
@@ -23,6 +25,8 @@ public static class ServiceConfiguration
         });
 
         services.AddScoped<IChatHistoryRepository, ChatHistoryRepository>();
+        services.AddScoped<IChatNotificationService, ChatNotificationService>();
+
 
         return services;
     }
