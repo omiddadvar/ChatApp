@@ -1,6 +1,7 @@
 using ChatApp.API.Hubs;
 using ChatApp.API.Modules.Identity;
 using ChatApp.API.Modules.Main;
+using ChatApp.API.Modules.Notification;
 using ChatApp.API.Modules.Shared.Infrastructure;
 using ChatApp.API.Modules.Shared.Kernel;
 using FluentValidation;
@@ -18,6 +19,7 @@ builder.Services.AddIdentityModule(builder.Configuration);
 
 builder.Services.AddMainModule(builder.Configuration);
 
+builder.Services.AddNotificationModule(builder.Configuration);
 
 builder.Services.AddValidatorsFromAssembly(
     typeof(Program).Assembly,
@@ -36,7 +38,9 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
 app.MapHub<ChatHub>("/hubs/chat");
+app.MapHub<NotificationHub>("/hubs/notifications");
 
 
 app.Run();
