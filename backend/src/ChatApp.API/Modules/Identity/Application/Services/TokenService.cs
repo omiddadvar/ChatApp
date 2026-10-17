@@ -12,6 +12,7 @@ using System.Text;
 
 namespace ChatApp.API.Modules.Identity.Application.Services;
 
+
 public class TokenService : ITokenService
 {
     private readonly IConfiguration _configuration;
@@ -47,7 +48,6 @@ public class TokenService : ITokenService
 
         var key = new SymmetricSecurityKey(
             Encoding.UTF8.GetBytes(_configuration["Jwt:SigningKey"]!));
-
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var token = new JwtSecurityToken(
@@ -61,11 +61,12 @@ public class TokenService : ITokenService
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
-    public async Task<RefreshToken> GenerateRefreshTokenAsync(AppUser user, string? ipAddress)
+    public async Task<RefreshToken> GenerateRefreshTokenAsync(
+        AppUser user,
+        string? ipAddress)
     {
         var refreshToken = new RefreshToken
         {
-            Id = Guid.NewGuid(),
             UserId = user.Id,
             Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
             ExpiresAt = DateTimeOffset.UtcNow.AddDays(7),
@@ -91,11 +92,12 @@ public class TokenService : ITokenService
         token.RevokedAt = DateTimeOffset.UtcNow;
         token.RevokedByIp = ipAddress;
         token.ReplacedByToken = replacedBy;
-
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task RevokeAllUserTokensAsync(Guid userId, string? ipAddress)
+    public async Task RevokeAllUserTokensAsync(
+        Guid userId,
+        string? ipAddress)
     {
         var tokens = await _dbContext.RefreshTokens
             .Where(t => t.UserId == userId && t.RevokedAt == null)
