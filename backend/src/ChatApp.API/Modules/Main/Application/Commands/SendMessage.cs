@@ -1,4 +1,6 @@
-﻿using ChatApp.API.Modules.Main.Application.Interfaces;
+﻿using ChatApp.API.Modules.Main.Application.Abstractions;
+using ChatApp.API.Modules.Main.Application.DTOs;
+using ChatApp.API.Modules.Main.Application.Interfaces;
 using ChatApp.API.Modules.Main.Domain.Documents;
 using ChatApp.API.Modules.Main.Domain.Enums;
 using ChatApp.API.Modules.Main.Infrastructure.Persistence;
@@ -45,17 +47,21 @@ public static class SendMessage
     {
         private readonly MainDbContext _db;
         private readonly IChatHistoryRepository _history;
+        private readonly IChatNotificationService _notify;
         private readonly ICurrentUser _currentUser;
 
         public Handler(
             MainDbContext db,
             IChatHistoryRepository history,
+            IChatNotificationService notify,
             ICurrentUser currentUser)
         {
             _db = db;
             _history = history;
+            _notify = notify;
             _currentUser = currentUser;
         }
+
 
         public async Task<Result<Guid>> Handle(Command request, CancellationToken ct)
         {
@@ -105,6 +111,19 @@ public static class SendMessage
 
             room.MarkMessageActivity(now);
             await _db.SaveChangesAsync(ct);
+
+            var envelope = new MessageEnvelope(
+                messageId,
+                room.Id,
+                userId,
+                _currentUser.UserName ?? "User",
+                document.Content,
+                document.AttachmentId,
+                document.MessageType,
+                now
+            );
+
+            await _notify.NotifyNewMessageAsync(room.Id, envelope, ct);
 
             return Result.Success(messageId);
         }
