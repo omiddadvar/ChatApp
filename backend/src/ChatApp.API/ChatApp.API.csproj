@@ -34,8 +34,4 @@
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Modules\Notification\" />
-  </ItemGroup>
-
 </Project>
