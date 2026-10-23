@@ -1,4 +1,5 @@
 ﻿using ChatApp.API.Modules.Notification.Application.Abstractions;
+using ChatApp.API.Modules.Notification.Application.DTOs;
 using ChatApp.API.Modules.Shared.Kernel.Abstractions;
 using ChatApp.API.Modules.Shared.Kernel.Mediator.Abstractions;
 using ChatApp.API.Modules.Shared.Kernel.ValueObjects;

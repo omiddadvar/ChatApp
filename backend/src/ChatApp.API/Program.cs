@@ -1,10 +1,14 @@
 using ChatApp.API.Hubs;
 using ChatApp.API.Modules.Identity;
+using ChatApp.API.Modules.Identity.Infrastructure.Persistence;
 using ChatApp.API.Modules.Main;
+using ChatApp.API.Modules.Main.Infrastructure.Persistence;
 using ChatApp.API.Modules.Notification;
+using ChatApp.API.Modules.Notification.Infrastructure.Persistence;
 using ChatApp.API.Modules.Shared.Infrastructure;
 using ChatApp.API.Modules.Shared.Kernel;
 using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -59,5 +63,26 @@ app.MapControllers();
 app.MapHub<ChatHub>("/hubs/chat");
 app.MapHub<NotificationHub>("/hubs/notifications");
 
+
+if (app.Environment.IsDevelopment())
+{
+    using var scope = app.Services.CreateScope();
+    var services = scope.ServiceProvider;
+    try
+    {
+        await Task.WhenAll
+        (
+            services.GetRequiredService<IdentityDbContext>().Database.MigrateAsync(),
+            services.GetRequiredService<MainDbContext>().Database.MigrateAsync(),
+            services.GetRequiredService<NotificationDbContext>().Database.MigrateAsync()
+        );
+        app.Logger.LogInformation("Database migrations applied successfully");
+    }
+    catch (Exception ex)
+    {
+        app.Logger.LogError(ex, "Migration failed");
+        throw;
+    }
+}
 
 app.Run();
