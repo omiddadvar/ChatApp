@@ -26,12 +26,29 @@ builder.Services.AddValidatorsFromAssembly(
     includeInternalTypes: true);
 
 
+// CORS
+var allowedOrigins = builder.Configuration
+    .GetSection("Cors:AllowedOrigins")
+    .Get<string[]>() ?? Array.Empty<string>();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("ChatAppCors", policy =>
+    {
+        policy.WithOrigins(allowedOrigins)
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+    });
+});
+
 var app = builder.Build();
 
 await app.MainModuleWebAppConfig();
 await app.IdentityModuleWebAppConfig();
 
 // Configure the HTTP request pipeline.
+app.UseCors("ChatAppCors");
 
 app.UseHttpsRedirection();
 

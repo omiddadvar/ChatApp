@@ -12,7 +12,6 @@ public static class SerilogConfiguration
             .ReadFrom.Configuration(configuration)
             .Enrich.FromLogContext()
             .Enrich.WithProperty("Application", "ChatApp.Api")
-            .WriteTo.Console()
             .CreateLogger();
 
         return host.UseSerilog();

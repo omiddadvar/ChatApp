@@ -1,3 +1,6 @@
 <Solution>
   <Project Path="ChatApp.API/ChatApp.API.csproj" Id="2e4e21a8-8df1-4075-9407-100c969fd59c" />
+  <Project Path="docker-compose.dcproj">
+    <Build />
+  </Project>
 </Solution>

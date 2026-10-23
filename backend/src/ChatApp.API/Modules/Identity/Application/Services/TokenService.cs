@@ -65,11 +65,14 @@ public class TokenService : ITokenService
         AppUser user,
         string? ipAddress)
     {
+        var expiryDays = double.Parse(
+            _configuration["Jwt:RefreshTokenExpiryDays"] ?? "7");
+
         var refreshToken = new RefreshToken
         {
             UserId = user.Id,
             Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
-            ExpiresAt = DateTimeOffset.UtcNow.AddDays(7),
+            ExpiresAt = DateTimeOffset.UtcNow.AddDays(expiryDays),
             CreatedAt = DateTimeOffset.UtcNow,
             CreatedByIp = ipAddress
         };
