@@ -50,13 +50,12 @@ public static class UploadAttachment
                     new Error("Attachment.Unauthenticated", "Not authenticated.", ErrorType.Unauthorized));
 
             var userId = _currentUser.UserId.Value;
-            var objectName = $"{Guid.NewGuid():N}{Path.GetExtension(request.FileName)}";
 
             await _fileStorage.UploadAsync(
-                request.Stream, objectName, request.ContentType, request.Size, ct);
+                request.Stream, request.FileName, request.ContentType, request.Size, ct);
 
             var attachment = Attachment.Create(
-                userId, objectName, request.FileName, request.ContentType, request.Size);
+                userId, request.FileName, request.FileName, request.ContentType, request.Size);
 
             _db.Attachments.Add(attachment);
             await _db.SaveChangesAsync(ct);

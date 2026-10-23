@@ -6,8 +6,6 @@ using ChatApp.API.Modules.Shared.Infrastructure.Storage;
 using ChatApp.API.Modules.Shared.Kernel.Abstractions;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Options;
-using Minio;
 using MongoDB.Driver;
 
 namespace ChatApp.API.Modules.Shared.Infrastructure;
@@ -26,11 +24,11 @@ public static class ServiceConfiguration
 
         services.AddEfInterceptorInfrastructure();
 
-        services.AddMinioInfrastructure(configuration);
-
         services.AddMongoInfrastructure(configuration);
 
         services.AddSingleton<IUserIdProvider, SignalRUserIdProvider>();
+
+        services.AddSingleton<IFileStorage, GridFsFileStorage>();
 
         services.AddSignalR(configuration);
 
@@ -55,50 +53,6 @@ public static class ServiceConfiguration
         services.AddSingleton<IMongoContext, MongoContext>();
     }
 
-    private static void AddMinioInfrastructure(
-        this IServiceCollection services,
-        IConfiguration configuration)
-    {
-        var minioSection = configuration.GetSection(MinioSettings.SectionName);
-
-        services.AddOptions<MinioSettings>()
-            .Bind(minioSection)
-            .ValidateDataAnnotations()
-            .Validate(settings => !string.IsNullOrWhiteSpace(settings.Endpoint),
-                $"{MinioSettings.SectionName}:Endpoint is required.")
-            .Validate(settings => !string.IsNullOrWhiteSpace(settings.AccessKey),
-                $"{MinioSettings.SectionName}:AccessKey is required.")
-            .Validate(settings => !string.IsNullOrWhiteSpace(settings.SecretKey),
-                $"{MinioSettings.SectionName}:SecretKey is required.")
-            .Validate(settings => !string.IsNullOrWhiteSpace(settings.BucketName),
-                $"{MinioSettings.SectionName}:BucketName is required.")
-            .Validate(settings => settings.MaxFileSizeBytes > 0,
-                $"{MinioSettings.SectionName}:MaxFileSizeBytes must be > 0.")
-            .Validate(settings => settings.PresignedUrlExpiryMinutes > 0,
-                $"{MinioSettings.SectionName}:PresignedUrlExpiryMinutes must be > 0.")
-            .ValidateOnStart();
-
-        services.AddSingleton<IMinioClient>(sp =>
-        {
-            var settings = sp.GetRequiredService<IOptions<MinioSettings>>().Value;
-            var logger = sp.GetRequiredService<ILogger<IMinioClient>>();
-
-            logger.LogInformation(
-                "Configuring MinIO client: Endpoint={Endpoint}, SSL={UseSSL}, Bucket={Bucket}",
-                settings.Endpoint, settings.UseSSL, settings.BucketName);
-
-            var builder = new MinioClient()
-                .WithEndpoint(settings.Endpoint)
-                .WithCredentials(settings.AccessKey, settings.SecretKey);
-
-            if (settings.UseSSL)
-                builder = builder.WithSSL();
-
-            return builder.Build();
-        });
-
-        services.AddSingleton<IFileStorage, MinioFileStorage>();
-    }
     private static void AddEfInterceptorInfrastructure(this IServiceCollection services)
     {
         services.AddScoped<AuditableEntityInterceptor>();

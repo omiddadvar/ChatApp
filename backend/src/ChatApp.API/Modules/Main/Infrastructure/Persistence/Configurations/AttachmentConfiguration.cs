@@ -11,12 +11,12 @@ public class AttachmentConfiguration : IEntityTypeConfiguration<Attachment>
         builder.ToTable("Attachments");
         builder.HasKey(x => x.Id);
 
-        builder.Property(x => x.ObjectName).HasMaxLength(500).IsRequired();
+        builder.Property(x => x.FileId).HasMaxLength(100).IsRequired();
         builder.Property(x => x.OriginalFileName).HasMaxLength(255).IsRequired();
         builder.Property(x => x.ContentType).HasMaxLength(100).IsRequired();
         builder.Property(x => x.SizeBytes).IsRequired();
 
-        builder.HasIndex(x => x.ObjectName).IsUnique();
+        builder.HasIndex(x => x.FileId).IsUnique();
         builder.HasIndex(x => x.UploadedByUserId);
     }
 }

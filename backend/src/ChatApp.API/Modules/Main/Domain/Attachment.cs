@@ -6,7 +6,7 @@ namespace ChatApp.API.Modules.Main.Domain;
 public class Attachment : AggregateRoot
 {
     public Guid UploadedByUserId { get; private set; }
-    public string ObjectName { get; private set; } = string.Empty;
+    public string FileId { get; private set; } = string.Empty;
     public string OriginalFileName { get; private set; } = string.Empty;
     public string ContentType { get; private set; } = string.Empty;
     public long SizeBytes { get; private set; }
@@ -19,7 +19,7 @@ public class Attachment : AggregateRoot
 
     public static Attachment Create(
         Guid uploadedByUserId,
-        string objectName,
+        string fileId,
         string originalFileName,
         string contentType,
         long sizeBytes)
@@ -34,7 +34,7 @@ public class Attachment : AggregateRoot
         {
             Id = Guid.NewGuid(),
             UploadedByUserId = uploadedByUserId,
-            ObjectName = objectName,
+            FileId = fileId,
             OriginalFileName = originalFileName,
             ContentType = contentType,
             SizeBytes = sizeBytes,

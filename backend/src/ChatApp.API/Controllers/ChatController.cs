@@ -66,4 +66,17 @@ public class ChatController : BaseController
         var result = await _sender.Send(command, ct);
         return result.IsSuccess ? Ok(new { id = result.Value }) : ToProblem(result.Error);
     }
+
+    [HttpGet("attachments/{id:guid}")]
+    public async Task<IActionResult> DownloadAttachment(Guid id, CancellationToken ct)
+    {
+        var result = await _sender.Send(new GetAttachmentFile.Query(id), ct);
+
+        if (result.IsFailure)
+            return ToProblem(result.Error);
+
+        var file = result.Value;
+
+        return File(file.Stream, file.ContentType, file.FileName);
+    }
 }
