@@ -67,11 +67,6 @@ if (app.Environment.IsDevelopment())
     var services = scope.ServiceProvider;
     try
     {
-        var database = services.GetRequiredService<IdentityDbContext>().Database;
-        var connString = database.GetConnectionString();
-        database.OpenConnection();
-        var connection = database.GetDbConnection();
-
         await Task.WhenAll
         (
             services.GetRequiredService<IdentityDbContext>().Database.EnsureCreatedAsync(),
