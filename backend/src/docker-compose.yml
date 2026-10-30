@@ -5,6 +5,7 @@ services:
     image: mcr.microsoft.com/mssql/server:2025-latest
     container_name: chatapp-sqlserver
     restart: unless-stopped
+    user: root
     environment:
       ACCEPT_EULA: "Y"
       MSSQL_SA_PASSWORD: "${MSSQL_SA_PASSWORD}"
@@ -15,12 +16,6 @@ services:
       - sqlserver_data:/var/opt/mssql/data
     networks:
       - chatapp-net
-    healthcheck:
-      test: ["CMD", "/opt/mssql-tools18/bin/sqlcmd", "-S", "localhost", "-U", "sa", "-P", "${MSSQL_SA_PASSWORD}", "-Q", "SELECT 1", "-C"]
-      interval: 15s
-      timeout: 10s
-      retries: 10
-      start_period: 45s
 
   mongo:
     image: mongodb/mongodb-community-server:9.0-ubi9-slim
@@ -40,22 +35,18 @@ services:
     image: ${DOCKER_REGISTRY-}chatappapi
     container_name: chatapp-api
     build:
-      context: ../backend
+      context: ./
       dockerfile: ChatApp.API/Dockerfile
     restart: unless-stopped
     depends_on:
-      sqlserver:
-        condition: service_healthy
       mongo:
         condition: service_started
-      minio:
-        condition: service_healthy
     environment:
       ASPNETCORE_ENVIRONMENT: "Development"
-      ASPNETCORE_URLS: "http://+:8080"
-      ConnectionStrings__SqlServer: "Server=sqlserver,1433;Database=ChatApp;User Id=sa;Password=${MSSQL_SA_PASSWORD};TrustServerCertificate=True;MultipleActiveResultSets=True"
-      ConnectionStrings__IdentityDb: "Server=sqlserver,1433;Database=ChatApp_Identity;User Id=sa;Password=${MSSQL_SA_PASSWORD};TrustServerCertificate=True;MultipleActiveResultSets=True"
-      ConnectionStrings__NotificationDb: "Server=sqlserver,1433;Database=ChatApp_Notification;User Id=sa;Password=${MSSQL_SA_PASSWORD};TrustServerCertificate=True;MultipleActiveResultSets=True"
+      ASPNETCORE_URLS: "http://+:8080"      
+      ConnectionStrings__SqlServer: "Server=sqlserver,1433;Database=ChatApp;User Id=sa;Password=${MSSQL_SA_PASSWORD};Encrypt=False;TrustServerCertificate=True;MultipleActiveResultSets=True"
+      ConnectionStrings__IdentityDb: "Server=sqlserver,1433;Database=ChatApp_Identity;User Id=sa;Password=${MSSQL_SA_PASSWORD};Encrypt=False;TrustServerCertificate=True;MultipleActiveResultSets=True"
+      ConnectionStrings__NotificationDb: "Server=sqlserver,1433;Database=ChatApp_Notification;User Id=sa;Password=${MSSQL_SA_PASSWORD};Encrypt=False;TrustServerCertificate=True;MultipleActiveResultSets=True"
       Mongo__ConnectionString: "mongodb://${MONGO_ROOT_USER}:${MONGO_ROOT_PASSWORD}@mongo:27017"
       Mongo__DatabaseName: "ChatApp_Chat"
       Jwt__Issuer: "ChatApp"
@@ -67,10 +58,25 @@ services:
     networks:
       - chatapp-net
 
+  seq:
+    image: datalust/seq:latest
+    container_name: chatapp-seq
+    restart: unless-stopped
+    environment:
+      ACCEPT_EULA: "Y"
+    ports:
+      - "5341:80"
+    volumes:
+      - seq_data:/data
+    networks:
+      - chatapp-net
+
 volumes:
   sqlserver_data:
     driver: local
   mongo_data:
+    driver: local
+  seq_data:
     driver: local
 
 networks:

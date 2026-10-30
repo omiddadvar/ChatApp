@@ -48,9 +48,6 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-await app.MainModuleWebAppConfig();
-await app.IdentityModuleWebAppConfig();
-
 // Configure the HTTP request pipeline.
 app.UseCors("ChatAppCors");
 
@@ -70,6 +67,17 @@ if (app.Environment.IsDevelopment())
     var services = scope.ServiceProvider;
     try
     {
+        var database = services.GetRequiredService<IdentityDbContext>().Database;
+        var connString = database.GetConnectionString();
+        database.OpenConnection();
+        var connection = database.GetDbConnection();
+
+        await Task.WhenAll
+        (
+            services.GetRequiredService<IdentityDbContext>().Database.EnsureCreatedAsync(),
+            services.GetRequiredService<MainDbContext>().Database.EnsureCreatedAsync(),
+            services.GetRequiredService<NotificationDbContext>().Database.EnsureCreatedAsync()
+        );
         await Task.WhenAll
         (
             services.GetRequiredService<IdentityDbContext>().Database.MigrateAsync(),
@@ -84,5 +92,8 @@ if (app.Environment.IsDevelopment())
         throw;
     }
 }
+
+await app.MainModuleWebAppConfig();
+await app.IdentityModuleWebAppConfig();
 
 app.Run();
