@@ -154,13 +154,13 @@ namespace ChatApp.API.Modules.Notification.Infrastructure.Persistence.Migrations
                     b.Property<Guid?>("DeletedBy")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("FileId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
-
-                    b.Property<string>("ObjectName")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("OriginalFileName")
                         .IsRequired()
@@ -184,7 +184,7 @@ namespace ChatApp.API.Modules.Notification.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ObjectName")
+                    b.HasIndex("FileId")
                         .IsUnique();
 
                     b.HasIndex("UploadedByUserId");

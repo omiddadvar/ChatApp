@@ -37,4 +37,10 @@
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.2.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Modules\Identity\Infrastructure\Persistence\Migrations\" />
+    <Folder Include="Modules\Main\Infrastructure\Persistence\Migrations\" />
+    <Folder Include="Modules\Notification\Infrastructure\Persistence\Migrations\" />
+  </ItemGroup>
+
 </Project>

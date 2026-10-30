@@ -17,7 +17,7 @@ namespace ChatApp.API.Modules.Notification.Infrastructure.Persistence.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UploadedByUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ObjectName = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    FileId = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     OriginalFileName = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     ContentType = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     SizeBytes = table.Column<long>(type: "bigint", nullable: false),
@@ -180,9 +180,9 @@ namespace ChatApp.API.Modules.Notification.Infrastructure.Persistence.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Attachments_ObjectName",
+                name: "IX_Attachments_FileId",
                 table: "Attachments",
-                column: "ObjectName",
+                column: "FileId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
